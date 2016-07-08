@@ -8,22 +8,21 @@ void DancingBlob::setup() {
     
     float angleChangePerPt = TWO_PI / (float)nPoints;
     float angle = 0;
-    
-    for (int i=0; i < nPoints; i++) {
-        ofVec2f pt;
-        
-        pt.x = origo.x + radius * sin(angle);
-        pt.y = origo.y + radius * cos(angle);
-        
-        points.push_back(pt);
-        angle += angleChangePerPt;
-    }
+    points.resize(nPoints);
 }
 
 void DancingBlob::update() {
+    
+    float angleChangePerPt = TWO_PI / (float)nPoints;
+    float angle = 0;
+    
     for (auto &p : points) {
-        p.x += ofRandom(-0.5, 0.5);
-        p.y += ofRandom(-0.5, 0.5);
+        float r = radius + ofRandom(-5, 5);
+        
+        p.x = origo.x + r * sin(angle);
+        p.y = origo.y + r * cos(angle);
+        
+        angle += angleChangePerPt;
     }
 }
 
@@ -35,10 +34,6 @@ void DancingBlob::draw() {
     for(int i=0; i<nPoints+3; i++) {
         blob.curveTo(points[i%nPoints]);
     }
-    
-//    for(auto p : points) {
-//        blob.curveTo(p);
-//    }
     
     blob.draw();
 }

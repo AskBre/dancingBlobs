@@ -2,7 +2,8 @@
 
 #include "ofMain.h"
 
-class DancingBlob : public ofBaseApp{
+class DancingBlob : public ofBaseApp {
+    
 public:
     void setup();
     void update();
