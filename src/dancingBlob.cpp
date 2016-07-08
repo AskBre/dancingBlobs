@@ -17,10 +17,13 @@ void DancingBlob::update() {
     float angle = 0;
     
     for (auto &p : points) {
-        float r = radius + ofRandom(-5, 5);
-        
-        p.x = origo.x + r * sin(angle);
-        p.y = origo.y + r * cos(angle);
+        if(p.r > 0) {
+            p.r += ofRandom(-0.49, 0.5);
+        } else {
+            p.r += ofRandom(0.5);
+        }
+        p.x = origo.x + p.r * sin(angle);
+        p.y = origo.y + p.r * cos(angle);
         
         angle += angleChangePerPt;
     }
@@ -32,7 +35,10 @@ void DancingBlob::draw() {
     ofPolyline blob;
     
     for(int i=0; i<nPoints+3; i++) {
-        blob.curveTo(points[i%nPoints]);
+        ofVec2f pt;
+        pt.x = points[i%nPoints].x;
+        pt.y = points[i%nPoints].y;
+        blob.curveTo(pt);
     }
     
     blob.draw();

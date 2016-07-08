@@ -8,9 +8,16 @@ public:
     void setup();
     void update();
     void draw();
-    
+        
 private:
-    vector<ofVec2f> points;
+    
+    struct point {
+        float x;
+        float y;
+        float r;
+    };
+    
+    vector<point> points;
     int nPoints;
     ofVec2f origo;
     float radius;
