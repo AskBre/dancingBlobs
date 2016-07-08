@@ -32,21 +32,33 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+    blob.setOrigo(ofVec2f(x, y));
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
+    switch (button) {
+        case 0:
+            blob.addPoint();
+            break;
+        case 1:
+            blob.removePoint();
+            break;
+        case 2:
+            blob.setPointCount(100);
+        default:
+            break;
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+    
 }
 
 //--------------------------------------------------------------

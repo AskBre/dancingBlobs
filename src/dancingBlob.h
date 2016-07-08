@@ -8,17 +8,20 @@ public:
     void setup();
     void update();
     void draw();
-        
-private:
     
+    void setOrigo(ofVec2f pos){origo = pos;};
+    void addPoint();
+    void removePoint();
+    void setPointCount(int count);
+    void getPointCount(){return points.size();};
+    
+private:
     struct point {
-        float x;
-        float y;
-        float r;
+        float x = 0;
+        float y = 0;
+        float r = 0;
     };
     
     vector<point> points;
-    int nPoints;
     ofVec2f origo;
-    float radius;
 };
