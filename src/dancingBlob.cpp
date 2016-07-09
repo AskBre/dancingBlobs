@@ -27,18 +27,11 @@ void DancingBlob::update() {
 void DancingBlob::draw() {
     ofSetHexColor(0xFFFFFF);
     
-    ofPolyline blob;
-    
-    // Iterate through points and curve to each
-    // Go through three first again to connect end
-    for(int i=0; i<points.size()+3; i++) {
-        ofVec2f pt;
-        pt.x = points.at(i % points.size()).x;
-        pt.y = points.at(i % points.size()).y;
-        blob.curveTo(pt);
-    }
-    
-    blob.draw();
+    ofBeginShape();
+        for(auto p : points) {
+            ofCurveVertex(p.x, p.y);
+        }
+    ofEndShape();
 }
 
 //--------------------------------------------------------------

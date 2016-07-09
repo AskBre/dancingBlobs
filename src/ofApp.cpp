@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetVerticalSync(true);
+    ofEnableSmoothing();
     
     ofBackground(0);
     blob.setup();
