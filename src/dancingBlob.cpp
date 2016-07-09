@@ -12,13 +12,13 @@ void DancingBlob::update() {
     float angle = 0;
     
     for (auto &p : points) {
-        if(p.r > 5) {
-            p.r += ofRandom(-0.5, 0.5);
+        if(p.d > 5) {
+            p.d += ofRandom(-0.5, 0.5);
         } else {
-            p.r += ofRandom(0.5);
+            p.d += ofRandom(0.5);
         }
-        p.x = origo.x + p.r * sin(angle);
-        p.y = origo.y + p.r * cos(angle);
+        p.x = origo.x + p.d * sin(angle);
+        p.y = origo.y + p.d * cos(angle);
         
         angle += angleChangePerPt;
     }
@@ -45,7 +45,7 @@ void DancingBlob::draw() {
 
 void DancingBlob::addPoint() {
     point p;
-    p.r = points[ofRandom(points.size()-1)].r;
+    p.d = points[ofRandom(points.size()-1)].d;
     points.insert(points.begin()+ofRandom(points.size()), p);
 }
 
@@ -68,4 +68,23 @@ void DancingBlob::setPointCount(int count) {
     while(count > points.size()) {
         addPoint();
     }
+}
+
+void DancingBlob::setPointDists(vector<float> &dists) {
+    if(dists.size() != points.size()) {
+        cerr << "Couldn't set point dists in setPointDists, vectors are of different length." << endl;
+        return;
+    } else {
+        for(int i=0; i<dists.size(); i++) {
+            points.at(i).d = dists.at(i);
+        }
+    }
+}
+
+void DancingBlob::getPointDists() {
+    vector<float> dists;
+    for(auto p : points) {
+        dists.push_back(p.d);
+    }
+    return dists;
 }

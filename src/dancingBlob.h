@@ -17,13 +17,18 @@ public:
     void setPointCount(int count);
     void getPointCount(){return points.size();};
     
+    void setPointDists(vector<float> &dists);
+    void getPointDists();
+    
 private:
+    
     struct point {
         float x = 0;
         float y = 0;
-        float r = 0;
+        float d = 0;
     };
     
     vector<point> points;
+    
     ofVec2f origo;
 };
