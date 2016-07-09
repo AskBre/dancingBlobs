@@ -5,11 +5,13 @@
 class DancingBlob : public ofBaseApp {
     
 public:
-    void setup();
+    void setup(int nPoints = 10);
     void update();
     void draw();
     
     void setOrigo(ofVec2f pos){origo = pos;};
+    void getOrigo(){return origo;};
+    
     void addPoint();
     void removePoint();
     void setPointCount(int count);

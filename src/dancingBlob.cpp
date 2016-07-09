@@ -1,9 +1,9 @@
 #include "dancingBlob.h"
 
-void DancingBlob::setup() {
+void DancingBlob::setup(int nPoints) {
     // Set default values
     origo.set(ofGetWidth()/2, ofGetHeight()/2);
-    points.resize(10);
+    points.resize(nPoints);
 }
 
 void DancingBlob::update() {
@@ -30,7 +30,7 @@ void DancingBlob::draw() {
     ofPolyline blob;
     
     // Iterate through points and curve to each
-    // Go through three first again to connect
+    // Go through three first again to connect end
     for(int i=0; i<points.size()+3; i++) {
         ofVec2f pt;
         pt.x = points.at(i % points.size()).x;
