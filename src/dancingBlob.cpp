@@ -35,7 +35,6 @@ void DancingBlob::draw() {
 }
 
 //--------------------------------------------------------------
-
 void DancingBlob::addPoint() {
     point p;
     p.d = points[ofRandom(points.size()-1)].d;
@@ -81,3 +80,5 @@ void DancingBlob::getPointDists() {
     }
     return dists;
 }
+
+//--------------------------------------------------------------
