@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxEasyFft.h"
 #include "dancingBlob.h"
 
 class ofApp : public ofBaseApp{
@@ -23,5 +24,6 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 		
         DancingBlob blob;
+        ofxEasyFft fft;
 
 };

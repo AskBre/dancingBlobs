@@ -20,6 +20,7 @@ public:
     void setPointDists(vector<float> &dists);
     void getPointDists();
     
+    
 private:
     struct point {
         float x = 0;
@@ -28,6 +29,12 @@ private:
     };
     
     vector<point> points;
+    vector<float> *fft;
+    vector<float> smoothFft;
     
     ofVec2f origo;
+    
+    void updateDists();
+    
+    void drawFft(vector<float> &fs);
 };
