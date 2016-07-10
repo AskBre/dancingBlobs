@@ -6,9 +6,9 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofBackground(0);
     
-    int pointCount = 4;
-    int fftSize = 16;
-    int audioBufferSize = 16;
+    int pointCount = 6;
+    int fftSize = 512;
+    int audioBufferSize = 512;
     blob.setup();
     blob.setPointCount(pointCount);
     
@@ -44,18 +44,15 @@ void ofApp::mouseDragged(int x, int y, int button){
 }
 
 void ofApp::mousePressed(int x, int y, int button){
-//    switch (button) {
-//        case 0:
-//            blob.addPoint();
-//            break;
-//        case 1:
-//            blob.setPointCount(100);
-//            break;
-//        case 2:
-//            blob.removePoint();
-//        default:
-//            break;
-//    }
+    switch (button) {
+        case 0:
+            blob.addPoint();
+            break;
+        case 2:
+            blob.removePoint();
+        default:
+            break;
+    }
 }
 
 void ofApp::mouseReleased(int x, int y, int button){

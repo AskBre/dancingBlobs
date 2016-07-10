@@ -7,7 +7,6 @@ void DancingBlob::setup(int nPoints) {
 }
 
 void DancingBlob::update() {
-    
     float angleChangePerPt = TWO_PI / (float)points.size();
     float angle = 0;
     updateDists();
@@ -20,20 +19,16 @@ void DancingBlob::update() {
 }
 
 void DancingBlob::draw() {
-    
+    ofSetHexColor(0xFFFFFF);
+    drawDebug(smoothFft);
+
     ofBeginShape();
     for(int i=0; i<points.size()+3; i++) {
         // Iterate through the start to connect it all
         point p = points.at(i%points.size());
         ofCurveVertex(p.x, p.y);
-        
-        ofSetHexColor(0xFF0000);
-        ofDrawCircle(p.x, p.y, 2);
     }
-    ofSetHexColor(0xFFFFFF);
     ofEndShape();
-    
-    drawFft(smoothFft);
 }
 
 //--------------------------------------------------------------
@@ -80,35 +75,40 @@ void DancingBlob::getPointDists() {
 //--------------------------------------------------------------
 void DancingBlob::updateDists() {
     int i = 0;
-    float offset = fft->size()/points.size();
+    float offset = (float)fft->size() / (float)(points.size()-1);
     float averaged = 0;
+    float gain = ofGetWidth()/4;
     
     for(int j=0; j<fft->size(); j++) {
-        smoothFft.at(j) *= 0.96;
+        smoothFft.at(j) *= 0.99;
         if(smoothFft.at(j) < fft->at(j)) smoothFft.at(j) = fft->at(j);
         
         averaged += smoothFft.at(j) / offset;
         
-        if(j> i*offset) {
-            points.at(i).d = averaged * ofGetWidth()/4;
-            averaged = 0;
+        if(j > i*offset) {
+            points.at(i).d = averaged * gain;
             i++;
+            averaged = 0;
         }
     }
 }
 
-void DancingBlob::drawFft(vector<float> &fs) {
+void DancingBlob::drawDebug(vector<float> &fs) {
+    ofSetHexColor(0xFF0000);
+    for(auto p : points) {
+        ofDrawCircle(p.x, p.y, 2);
+    }
+    
     float gain = ofGetHeight()/4;
     float offset = ofGetWidth()/fs.size();
     float xPos;
     
     ofPolyline line;
-    ofSetHexColor(0xFFFFFF);
-    
     for(auto f : fs) {
         line.curveTo(xPos, ofGetHeight()-(f*gain));
         xPos+=offset;
     }
     
+    ofSetHexColor(0xFFFFFF);
     line.draw();
 }

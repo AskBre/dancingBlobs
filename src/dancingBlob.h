@@ -36,5 +36,5 @@ private:
     
     void updateDists();
     
-    void drawFft(vector<float> &fs);
+    void drawDebug(vector<float> &fs);
 };
