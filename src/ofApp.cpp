@@ -6,12 +6,14 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofBackground(0);
     
-    int pointCount = 256;
+    int pointCount = 4;
+    int fftSize = 16;
+    int audioBufferSize = 16;
     blob.setup();
-    blob.setPointCount(pointCount+1);
+    blob.setPointCount(pointCount);
     
 //    fft.setup(16384);
-    fft.setup(pointCount, OF_FFT_WINDOW_SINE, OF_FFT_BASIC, pointCount, 44100);
+    fft.setup(fftSize, OF_FFT_WINDOW_SINE, OF_FFT_BASIC, audioBufferSize, 44100);
     fft.setUseNormalization(true);
 }
 

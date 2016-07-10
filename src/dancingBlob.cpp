@@ -20,12 +20,17 @@ void DancingBlob::update() {
 }
 
 void DancingBlob::draw() {
-    ofSetHexColor(0xFFFFFF);
     
     ofBeginShape();
-        for(auto p : points) {
-            ofCurveVertex(p.x, p.y);
-        }
+    for(int i=0; i<points.size()+3; i++) {
+        // Iterate through the start to connect it all
+        point p = points.at(i%points.size());
+        ofCurveVertex(p.x, p.y);
+        
+        ofSetHexColor(0xFF0000);
+        ofDrawCircle(p.x, p.y, 2);
+    }
+    ofSetHexColor(0xFFFFFF);
     ofEndShape();
     
     drawFft(smoothFft);
@@ -60,24 +65,8 @@ void DancingBlob::setPointCount(int count) {
 }
 
 void DancingBlob::setPointDists(vector<float> &dists) {
-    if(dists.size() != points.size()) {
-        cerr << "Couldn't set point dists in setPointDists, vectors are of different length." << endl;
-        cout << "Changing point size to " << dists.size() << endl;
-        setPointCount(dists.size());
-    }
-    
     fft = &dists;
     smoothFft.resize(fft->size());
-    
-//    } else {
-//        for(int i=0; i<dists.size(); i++) {
-//            if(points.at(i).d > 0) {
-//                points.at(i).d += (dists.at(i)*(1+i*0.1));
-//            } else {
-//                points.at(i).d = 0.01;
-//            }
-//        }
-//    }
 }
 
 void DancingBlob::getPointDists() {
@@ -90,11 +79,21 @@ void DancingBlob::getPointDists() {
 
 //--------------------------------------------------------------
 void DancingBlob::updateDists() {
-    for(int i=0; i<fft->size(); i++) {
-        smoothFft.at(i) *= 0.96;
-        if(smoothFft.at(i) < fft->at(i)) smoothFft.at(i) = fft->at(i);
+    int i = 0;
+    float offset = fft->size()/points.size();
+    float averaged = 0;
+    
+    for(int j=0; j<fft->size(); j++) {
+        smoothFft.at(j) *= 0.96;
+        if(smoothFft.at(j) < fft->at(j)) smoothFft.at(j) = fft->at(j);
         
-        points.at(i).d = smoothFft.at(i)*ofGetWidth()/4;
+        averaged += smoothFft.at(j) / offset;
+        
+        if(j> i*offset) {
+            points.at(i).d = averaged * ofGetWidth()/4;
+            averaged = 0;
+            i++;
+        }
     }
 }
 
