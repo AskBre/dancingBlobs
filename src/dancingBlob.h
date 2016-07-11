@@ -37,4 +37,5 @@ private:
     void updateDists();
     
     void drawDebug(vector<float> &fs);
+    void flatifyFft(vector<float> &fft);
 };

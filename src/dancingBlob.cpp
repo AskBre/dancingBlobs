@@ -7,6 +7,9 @@ void DancingBlob::setup(int nPoints) {
 }
 
 void DancingBlob::update() {
+    
+    flatifyFft(*fft);
+    
     float angleChangePerPt = TWO_PI / (float)points.size();
     float angle = 0;
     updateDists();
@@ -20,7 +23,7 @@ void DancingBlob::update() {
 
 void DancingBlob::draw() {
     ofSetHexColor(0xFFFFFF);
-    drawDebug(smoothFft);
+    drawDebug(*fft);
 
     ofBeginShape();
     for(int i=0; i<points.size()+3; i++) {
@@ -77,7 +80,7 @@ void DancingBlob::updateDists() {
     int i = 0;
     float offset = (float)fft->size() / (float)(points.size()-1);
     float averaged = 0;
-    float gain = ofGetWidth()/4;
+    float gain = ofGetHeight();
     
     for(int j=0; j<fft->size(); j++) {
         smoothFft.at(j) *= 0.99;
@@ -99,8 +102,8 @@ void DancingBlob::drawDebug(vector<float> &fs) {
         ofDrawCircle(p.x, p.y, 2);
     }
     
-    float gain = ofGetHeight()/4;
-    float offset = ofGetWidth()/fs.size();
+    float gain = ofGetHeight();
+    float offset = (float)ofGetWidth()/(float)fs.size();
     float xPos;
     
     ofPolyline line;
@@ -111,4 +114,13 @@ void DancingBlob::drawDebug(vector<float> &fs) {
     
     ofSetHexColor(0xFFFFFF);
     line.draw();
+}
+
+void DancingBlob::flatifyFft(vector<float> &vec) {
+    // The lower the freq, the less its worth
+    int count = vec.size();
+    for(int i=0; i<count; i++){
+        float gain = (float)i/(float)count;
+        vec.at(i) *= (gain + 0.2);
+    }
 }
