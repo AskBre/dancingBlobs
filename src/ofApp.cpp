@@ -5,13 +5,13 @@ void ofApp::setup(){
     ofSetVerticalSync(true);
     ofEnableSmoothing();
     ofBackground(0);
-    
+
     int pointCount = 6;
     int fftSize = 512;
     int audioBufferSize = 512;
     blob.setup();
     blob.setPointCount(pointCount);
-    
+
 //    fft.setup(16384);
     fft.setup(fftSize, OF_FFT_WINDOW_SINE, OF_FFT_BASIC, audioBufferSize, 44100);
     fft.setUseNormalization(true);
@@ -25,7 +25,7 @@ void ofApp::update(){
 
 void ofApp::draw(){
     blob.draw();
-    
+
     ofDrawBitmapString(ofToString(ofGetFrameRate()), 10, 10);
 }
 

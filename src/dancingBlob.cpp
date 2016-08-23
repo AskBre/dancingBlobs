@@ -7,16 +7,16 @@ void DancingBlob::setup(int nPoints) {
 }
 
 void DancingBlob::update() {
-    
+
     flatifyFft(*fft);
-    
+
     float angleChangePerPt = TWO_PI / (float)points.size();
     float angle = 0;
     updateDists();
     for (auto &p : points) {
         p.x = origo.x + p.d * sin(angle);
         p.y = origo.y + p.d * cos(angle);
-        
+
         angle += angleChangePerPt;
     }
 }
@@ -52,11 +52,11 @@ void DancingBlob::setPointCount(int count) {
         cerr << "Must have at least one point" << endl;
         return;
     }
-    
+
     if(count < points.size()) {
         points.resize(count);
     }
-    
+
     while(count > points.size()) {
         addPoint();
     }
@@ -67,7 +67,7 @@ void DancingBlob::setPointDists(vector<float> &dists) {
     smoothFft.resize(fft->size());
 }
 
-void DancingBlob::getPointDists() {
+auto DancingBlob::getPointDists() {
     vector<float> dists;
     for(auto p : points) {
         dists.push_back(p.d);
@@ -81,13 +81,13 @@ void DancingBlob::updateDists() {
     float offset = (float)fft->size() / (float)(points.size()-1);
     float averaged = 0;
     float gain = ofGetHeight();
-    
+
     for(int j=0; j<fft->size(); j++) {
         smoothFft.at(j) *= 0.99;
         if(smoothFft.at(j) < fft->at(j)) smoothFft.at(j) = fft->at(j);
-        
+
         averaged += smoothFft.at(j) / offset;
-        
+
         if(j > i*offset) {
             points.at(i).d = averaged * gain;
             i++;
@@ -101,17 +101,17 @@ void DancingBlob::drawDebug(vector<float> &fs) {
     for(auto p : points) {
         ofDrawCircle(p.x, p.y, 2);
     }
-    
+
     float gain = ofGetHeight();
     float offset = (float)ofGetWidth()/(float)fs.size();
     float xPos;
-    
+
     ofPolyline line;
     for(auto f : fs) {
         line.curveTo(xPos, ofGetHeight()-(f*gain));
         xPos+=offset;
     }
-    
+
     ofSetHexColor(0xFFFFFF);
     line.draw();
 }
