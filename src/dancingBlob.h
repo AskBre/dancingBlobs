@@ -28,6 +28,7 @@ class DancingBlob : public ofBaseApp {
 		};
 
 		ofxAubioMelBands bands;
+		ofxAubioPitch pitch;
 		vector<float> smoothBands;
 		vector<point> points;
 

@@ -6,7 +6,10 @@ void DancingBlob::setup(int bufferSize, int sampleRate) {
     origo.set(ofGetWidth()/2, ofGetHeight()/2);
     points.resize(nPoints);
     points.pop_back();
-    bands.setup("default", 512, bufferSize, sampleRate);
+
+    bands.setup("default", bufferSize, bufferSize, sampleRate);
+    pitch.setup("yinfft", 8 * bufferSize, bufferSize, sampleRate);
+
     smoothBands.resize(bands.nBands);
 }
 
@@ -42,6 +45,7 @@ void DancingBlob::draw() {
 
 void DancingBlob::audioIn(float *input, int bufferSize) {
 	bands.audioIn(input, bufferSize, 1);
+	pitch.audioIn(input, bufferSize, 1);
 }
 
 //--------------------------------------------------------------
@@ -77,7 +81,7 @@ void DancingBlob::updateDists() {
     int i = 0;
     float offset = (float)bands.nBands / (float)(points.size()-1);
     float averaged = 0;
-    float gain = ofGetHeight()*2;
+    float gain = ofGetHeight()*5;
 
 
     for(int j=0; j<bands.nBands; j++) {
@@ -99,6 +103,10 @@ void DancingBlob::updateDists() {
 }
 
 void DancingBlob::drawDebug() {
+
+    ofDrawBitmapString(pitch.latestPitch, 10, 20);
+    ofDrawBitmapString(pitch.pitchConfidence, 10, 30);
+
     ofSetHexColor(0xFF0000);
     for(auto p : points) {
         ofDrawCircle(p.x, p.y, 2);

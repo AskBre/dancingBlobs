@@ -7,7 +7,6 @@ void ofApp::setup(){
     ofBackground(0);
 
     int pointCount = 6;
-    int fftSize = 512;
     int bufferSize = 256;
     int sampleRate = 44100; 
 
