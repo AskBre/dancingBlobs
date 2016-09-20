@@ -1,13 +1,14 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxEasyFft.h"
 #include "dancingBlob.h"
 
 class ofApp : public ofBaseApp{
 
 	public:
 		void setup();
+		void exit();
+
 		void update();
 		void draw();
 
@@ -23,6 +24,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+		void audioIn(float * input, int bufferSize, int nChannels);
+
 		DancingBlob blob;
-		ofxEasyFft fft;
 };

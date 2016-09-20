@@ -1,13 +1,16 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxAubio.h"
 
 class DancingBlob : public ofBaseApp {
 
 	public:
-		void setup(int nPoints = 10);
+		void setup(int bufferSize, int sampleRate);
 		void update();
 		void draw();
+
+		void audioIn(float * input, int bufferSize);
 
 		void setOrigo(ofVec2f pos){origo = pos;};
 		ofVec2f getOrigo(){return origo;};
@@ -17,9 +20,6 @@ class DancingBlob : public ofBaseApp {
 		void setPointCount(int count);
 		int getPointCount(){return points.size();};
 
-		void setPointDists(vector<float> &dists);
-		auto getPointDists();
-
 	private:
 		struct point {
 		float x = 0;
@@ -27,14 +27,13 @@ class DancingBlob : public ofBaseApp {
 		float d = 0;
 		};
 
+		ofxAubioMelBands bands;
+		vector<float> smoothBands;
 		vector<point> points;
-		vector<float> *fft;
-		vector<float> smoothFft;
 
 		ofVec2f origo;
 
 		void updateDists();
 
-		void drawDebug(vector<float> &fs);
-		void flatifyFft(vector<float> &fft);
+		void drawDebug();
 };

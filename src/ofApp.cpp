@@ -8,18 +8,21 @@ void ofApp::setup(){
 
     int pointCount = 6;
     int fftSize = 512;
-    int audioBufferSize = 512;
-    blob.setup();
+    int bufferSize = 256;
+    int sampleRate = 44100; 
+
+    blob.setup(bufferSize, sampleRate);
     blob.setPointCount(pointCount);
 
-//    fft.setup(16384);
-    fft.setup(fftSize, OF_FFT_WINDOW_SINE, OF_FFT_BASIC, audioBufferSize, 44100);
-    fft.setUseNormalization(true);
+    ofSoundStreamSetup(0, 1, this); 
+}
+
+void ofApp::exit() {
+	ofSoundStreamStop();
+	ofSoundStreamClose();
 }
 
 void ofApp::update(){
-    fft.update();
-    blob.setPointDists(fft.getBins());
     blob.update();
 }
 
@@ -27,6 +30,10 @@ void ofApp::draw(){
     blob.draw();
 
     ofDrawBitmapString(ofToString(ofGetFrameRate()), 10, 10);
+}
+
+void ofApp::audioIn(float *input, int bufferSize, int nChannels) {
+	blob.audioIn(input, bufferSize);
 }
 
 //--------------------------------------------------------------
