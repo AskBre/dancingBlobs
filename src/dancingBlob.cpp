@@ -7,7 +7,7 @@ void DancingBlob::setup(int bufferSize, int sampleRate) {
     points.resize(nPoints);
     points.pop_back();
 
-    bands.setup("default", bufferSize, bufferSize, sampleRate);
+    bands.setup("default", bufferSize, bufferSize*0.5, sampleRate);
     pitch.setup("yinfft", 8 * bufferSize, bufferSize, sampleRate);
 
     smoothBands.resize(bands.nBands);
@@ -30,7 +30,7 @@ void DancingBlob::update() {
 void DancingBlob::draw() {
     ofSetHexColor(0xFFFFFF);
 
-    drawDebug();
+//    drawDebug();
 
     ofBeginShape();
     for(int i=0; i<points.size()+3; i++) {
@@ -81,20 +81,42 @@ void DancingBlob::updateDists() {
     int i = 0;
     float offset = (float)bands.nBands / (float)(points.size()-1);
     float averaged = 0;
-    float gain = ofGetHeight()*5;
+    float gain = ofGetHeight() * 10;
 
 
+    /*
     for(int j=0; j<bands.nBands; j++) {
-	smoothBands[j] *= 0.99;
+	smoothBands[j] *= 0.999;
 
         if(smoothBands[j] < bands.energies[j]) smoothBands[j] = bands.energies[j];
 
-//	flatifyBands();
+	flatifyBands();
 
         averaged += smoothBands[j] / offset;
 
         if(j > i*offset) {
             points.at(i).d = averaged * gain;
+            i++;
+            averaged = 0;
+        }
+    }
+    */
+    for(int j=0; j<bands.nBands; j++) {
+
+	float speed = 0.0001;
+
+	if(smoothBands[j]>0) {
+		if(smoothBands[j] < bands.energies[j]) smoothBands[j] += speed;
+		else if (smoothBands[j] > bands.energies[j]) smoothBands[j] -= speed;
+	} else {
+		smoothBands[j] = speed;
+	}
+
+
+	float dist = smoothBands[j]/offset;
+
+	if(j > i*offset) {
+            points.at(i).d = dist * gain;
             i++;
             averaged = 0;
         }
