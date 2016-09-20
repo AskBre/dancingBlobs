@@ -13,7 +13,9 @@ void DancingBlob::setup(int bufferSize, int sampleRate) {
 void DancingBlob::update() {
     float angleChangePerPt = TWO_PI / (float)points.size();
     float angle = 0;
+
     updateDists();
+
     for (auto &p : points) {
         p.x = origo.x + p.d * sin(angle);
         p.y = origo.y + p.d * cos(angle);
@@ -77,10 +79,13 @@ void DancingBlob::updateDists() {
     float averaged = 0;
     float gain = ofGetHeight()*2;
 
+
     for(int j=0; j<bands.nBands; j++) {
 	smoothBands[j] *= 0.99;
 
         if(smoothBands[j] < bands.energies[j]) smoothBands[j] = bands.energies[j];
+
+//	flatifyBands();
 
         averaged += smoothBands[j] / offset;
 
@@ -90,6 +95,7 @@ void DancingBlob::updateDists() {
             averaged = 0;
         }
     }
+
 }
 
 void DancingBlob::drawDebug() {
@@ -119,4 +125,13 @@ void DancingBlob::drawDebug() {
 
     ofSetHexColor(0xFFFFFF);
     smoothLine.draw();
+}
+
+void DancingBlob::flatifyBands() {
+    // The lower the freq, the less its worth
+    int count = smoothBands.size();
+    for(int i=0; i<count; i++){
+        float gain = (float)i/(float)count;
+        smoothBands.at(i) *= gain;
+    }
 }

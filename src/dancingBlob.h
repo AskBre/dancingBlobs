@@ -34,6 +34,7 @@ class DancingBlob : public ofBaseApp {
 		ofVec2f origo;
 
 		void updateDists();
+		void flatifyBands();
 
 		void drawDebug();
 };
