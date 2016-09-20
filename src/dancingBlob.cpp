@@ -5,6 +5,7 @@ void DancingBlob::setup(int bufferSize, int sampleRate) {
     int nPoints = 10;
     origo.set(ofGetWidth()/2, ofGetHeight()/2);
     points.resize(nPoints);
+    points.pop_back();
     bands.setup("default", 512, bufferSize, sampleRate);
     smoothBands.resize(bands.nBands);
 }
@@ -29,7 +30,9 @@ void DancingBlob::draw() {
     ofBeginShape();
     for(int i=0; i<points.size()+3; i++) {
         // Iterate through the start to connect it all
-        point p = points.at(i%points.size());
+	int mi = i%(points.size()-1);
+        point p = points.at(mi);
+
         ofCurveVertex(p.x, p.y);
     }
     ofEndShape();
@@ -72,7 +75,7 @@ void DancingBlob::updateDists() {
     int i = 0;
     float offset = (float)bands.nBands / (float)(points.size()-1);
     float averaged = 0;
-    float gain = ofGetHeight();
+    float gain = ofGetHeight()*2;
 
     for(int j=0; j<bands.nBands; j++) {
 	smoothBands[j] *= 0.99;
