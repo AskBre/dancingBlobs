@@ -15,7 +15,7 @@ class DancingBlob : public ofBaseApp {
 		void setup(int bufferSize, int sampleRate);
 		void update();
 		void draw();
-
+		void drawDebug();
 
 		void audioIn(float * input, int bufferSize);
 
@@ -47,5 +47,4 @@ class DancingBlob : public ofBaseApp {
 		void updateDists();
 		void flatifyBands();
 
-		void drawDebug();
 };

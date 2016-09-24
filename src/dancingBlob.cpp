@@ -50,7 +50,40 @@ void DancingBlob::draw() {
 	ofEndShape();
 }
 
+void DancingBlob::drawDebug() {
 
+	ofDrawBitmapString(pitch.latestPitch, 10, 20);
+	ofDrawBitmapString(pitch.pitchConfidence, 10, 30);
+
+	ofSetHexColor(0xFF0000);
+	for(auto p : points) {
+		ofDrawCircle(p.x, p.y, 2);
+	}
+
+	float gain = ofGetHeight();
+	float offset = (float)ofGetWidth()/(float)bands.nBands;
+	float xPos;
+
+	ofPolyline line;
+	for(int i=0; i<bands.nBands; i++) {
+		line.curveTo(xPos, ofGetHeight()-(bands.energies[i]*gain));
+		xPos+=offset;
+	}
+	ofSetHexColor(0xFFFFFF);
+	line.draw();
+
+	xPos = 0;
+	ofPolyline smoothLine;
+	for(int i=0; i<bands.nBands; i++) {
+		smoothLine.curveTo(xPos, ofGetHeight()-(smoothBands[i]*gain));
+		xPos+=offset;
+	}
+
+	ofSetHexColor(0xFFFFFF);
+	smoothLine.draw();
+}
+
+//--------------------------------------------------------------
 void DancingBlob::audioIn(float *input, int bufferSize) {
 	bands.audioIn(input, bufferSize, 1);
 	pitch.audioIn(input, bufferSize, 1);
@@ -151,38 +184,6 @@ void DancingBlob::updateDists() {
 
 }
 
-void DancingBlob::drawDebug() {
-
-	ofDrawBitmapString(pitch.latestPitch, 10, 20);
-	ofDrawBitmapString(pitch.pitchConfidence, 10, 30);
-
-	ofSetHexColor(0xFF0000);
-	for(auto p : points) {
-		ofDrawCircle(p.x, p.y, 2);
-	}
-
-	float gain = ofGetHeight();
-	float offset = (float)ofGetWidth()/(float)bands.nBands;
-	float xPos;
-
-	ofPolyline line;
-	for(int i=0; i<bands.nBands; i++) {
-		line.curveTo(xPos, ofGetHeight()-(bands.energies[i]*gain));
-		xPos+=offset;
-	}
-	ofSetHexColor(0xFFFFFF);
-	line.draw();
-
-	xPos = 0;
-	ofPolyline smoothLine;
-	for(int i=0; i<bands.nBands; i++) {
-		smoothLine.curveTo(xPos, ofGetHeight()-(smoothBands[i]*gain));
-		xPos+=offset;
-	}
-
-	ofSetHexColor(0xFFFFFF);
-	smoothLine.draw();
-}
 
 void DancingBlob::flatifyBands() {
 	// The lower the freq, the less its worth

@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "dancingBlob.h"
+#include "GuiApp.h"
 
 class ofApp : public ofBaseApp{
 
@@ -27,4 +28,6 @@ class ofApp : public ofBaseApp{
 		void audioIn(float * input, int bufferSize, int nChannels);
 
 		DancingBlob blob;
+
+		shared_ptr<GuiApp> gui;
 };

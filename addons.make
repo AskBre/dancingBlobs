@@ -1,1 +1,2 @@
 ofxAubio
+ofxGui

@@ -19,10 +19,6 @@ void ofApp::setup(){
 
 	ofSoundStreamSetup(0, 1, this);
 
-	ofSetLogLevel(OF_LOG_VERBOSE);
-
-	if(ofGetLogLevel() == OF_LOG_VERBOSE) cout << "DEbuggong!!!!!!!!!!" << endl;
-	else cout << "Not debugging..." << endl;
 }
 
 void ofApp::exit() {
@@ -36,8 +32,7 @@ void ofApp::update(){
 
 void ofApp::draw(){
 	blob.draw();
-
-	ofDrawBitmapString(ofToString(ofGetFrameRate()), 10, 10);
+	if(gui->isDebug) blob.drawDebug();
 }
 
 void ofApp::audioIn(float *input, int bufferSize, int nChannels) {
