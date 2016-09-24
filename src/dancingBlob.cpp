@@ -1,7 +1,9 @@
 #include "dancingBlob.h"
 // TODO Flatten FFT so bass doesn't have the extreme priority
 
-void DancingBlob::setup(int bufferSize, int sampleRate) {
+void DancingBlob::setup(type_t _type, int bufferSize, int sampleRate) {
+	type = _type;
+
 	// Setup mouse events
 	ofAddListener(ofEvents().mousePressed, this, &DancingBlob::mousePressed);
 	ofAddListener(ofEvents().mouseReleased, this, &DancingBlob::mouseReleased);
@@ -14,33 +16,43 @@ void DancingBlob::setup(int bufferSize, int sampleRate) {
 	points.resize(nPoints);
 	points.pop_back();
 
-	bands.setup("default", bufferSize, bufferSize*0.5, sampleRate);
+	// Setup aubio-analyzers
+	bands.setup("default", bufferSize * 2, bufferSize * 0.5, sampleRate);
 	pitch.setup("yinfft", 8 * bufferSize, bufferSize, sampleRate);
 
+	//
 	smoothBands.resize(bands.nBands);
 }
 
 void DancingBlob::update() {
-	float angleChangePerPt = TWO_PI / (float)points.size();
-	float angle = 0;
+	switch (type) {
+		case DIRECT:
+			updateDirect();
+			break;
+		case EASE:
+			updateEase();
+			break;
+		// TODO Ease_out and _in doesn't work
+		case EASE_OUT:
+			updateEaseOut();
+			break;
+		case EASE_IN:
+			updateEaseIn();
+			break;
+		default:
+			updateEase();
+			break;
+	}
 
 	updateDists();
-
-	for (auto &p : points) {
-		p.x = origo.x + p.d * sin(angle);
-		p.y = origo.y + p.d * cos(angle);
-
-		angle += angleChangePerPt;
-	}
 }
 
 void DancingBlob::draw() {
 	ofSetHexColor(0xFFFFFF);
 
-	//    drawDebug();
-
+	// TODO Test different forms of drawing and winding
 	ofBeginShape();
-	for(unsigned i=0; i<points.size()+5; i++) {
+	for(unsigned i=0; i<points.size()+3; i++) {
 		// Iterate through the start to connect it all
 		int mi = i%(points.size()-1);
 		point p = points.at(mi);
@@ -140,56 +152,65 @@ void DancingBlob::mouseDragged(ofMouseEventArgs &mouseArgs) {
 void DancingBlob::updateDists() {
 	int i = 0;
 	float offset = (float)bands.nBands / (float)(points.size()-1);
-	float averaged = 0;
-	float gain = ofGetHeight() * 10;
+	float angleChangePerPt = TWO_PI / (float)points.size();
+	float angle = 0;
 
-	/*
 	for(int j=0; j<bands.nBands; j++) {
-		smoothBands[j] *= 0.999;
-
-		if(smoothBands[j] < bands.energies[j]) smoothBands[j] = bands.energies[j];
-
-		flatifyBands();
-
-		averaged += smoothBands[j] / offset;
-
+		float dist = smoothBands[j]/offset;
 		if(j > i*offset) {
-			points.at(i).d = averaged * gain;
+			points.at(i).d = dist * gain;
 			i++;
-			averaged = 0;
+		}
+
+	}
+
+	for (auto &p : points) {
+		p.x = origo.x + p.d * sin(angle);
+		p.y = origo.y + p.d * cos(angle);
+
+		angle += angleChangePerPt;
+	}
+}
+//--------------------------------------------------------------
+void DancingBlob::updateDirect() {
+	for(int j=0; j<bands.nBands; j++) {
+		if(smoothBands[j] > 0) {
+			smoothBands[j] = bands.energies[j];
+		} else {
+			smoothBands[j] = speed;
 		}
 	}
-	*/
+}
 
+void DancingBlob::updateEase() {
 	for(int j=0; j<bands.nBands; j++) {
-
-		float speed = 0.0001;
-
-		if(smoothBands[j]>0) {
+		if(smoothBands[j] > 0) {
 			if(smoothBands[j] < bands.energies[j]) smoothBands[j] += speed;
 			else if (smoothBands[j] > bands.energies[j]) smoothBands[j] -= speed;
 		} else {
 			smoothBands[j] = speed;
 		}
-
-
-		float dist = smoothBands[j]/offset;
-
-		if(j > i*offset) {
-			points.at(i).d = dist * gain;
-			i++;
-			averaged = 0;
-		}
 	}
-
 }
 
+void DancingBlob::updateEaseOut() {
+	for(int j=0; j<bands.nBands; j++) {
+		if(smoothBands[j] > 0) {
+			if(smoothBands[j] < bands.energies[j]) smoothBands[j] *= 1 + speed;
+			else if (smoothBands[j] > bands.energies[j]) smoothBands[j] = bands.energies[j];
+		} else {
+			smoothBands[j] = speed;
+		}
+	}
+}
 
-void DancingBlob::flatifyBands() {
-	// The lower the freq, the less its worth
-	unsigned count = smoothBands.size();
-	for(unsigned i=0; i<count; i++){
-		float gain = (float)i/(float)count;
-		smoothBands.at(i) *= gain;
+void DancingBlob::updateEaseIn() {
+	for(int j=0; j<bands.nBands; j++) {
+		if(smoothBands[j] > 0) {
+			if(smoothBands[j] < bands.energies[j]) smoothBands[j] = bands.energies[j];
+			else if (smoothBands[j] > bands.energies[j]) smoothBands[j] *= speed;
+		} else {
+			smoothBands[j] = speed;
+		}
 	}
 }

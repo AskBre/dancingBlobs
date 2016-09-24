@@ -3,6 +3,13 @@
 #include "ofMain.h"
 #include "ofxAubio.h"
 
+enum type_t {
+	DIRECT,
+	EASE,
+	EASE_OUT,
+	EASE_IN,
+};
+
 class DancingBlob : public ofBaseApp {
 
 	public:
@@ -12,7 +19,7 @@ class DancingBlob : public ofBaseApp {
 			ofRemoveListener(ofEvents().mouseDragged, this, &DancingBlob::mouseDragged);
 		};
 
-		void setup(int bufferSize, int sampleRate);
+		void setup(type_t type, int bufferSize, int sampleRate);
 		void update();
 		void draw();
 		void drawDebug();
@@ -22,6 +29,10 @@ class DancingBlob : public ofBaseApp {
 		void addPoint();
 		void removePoint();
 		void setPointCount(unsigned count);
+
+		float gain = ofGetHeight() * 10;
+		float speed = 0.0001;
+		type_t type;
 
 	private:
 		struct point {
@@ -45,6 +56,9 @@ class DancingBlob : public ofBaseApp {
 		void mouseDragged(ofMouseEventArgs &mouseArgs);
 
 		void updateDists();
-		void flatifyBands();
 
+		void updateDirect();
+		void updateEase();
+		void updateEaseOut();
+		void updateEaseIn();
 };

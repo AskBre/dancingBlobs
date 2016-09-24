@@ -10,12 +10,10 @@ void ofApp::setup(){
 	ofEnableSmoothing();
 	ofBackground(0);
 
-	int pointCount = 6;
 	int bufferSize = 256;
 	int sampleRate = 44100;
 
-	blob.setup(bufferSize, sampleRate);
-	blob.setPointCount(pointCount);
+	blob.setup(EASE, bufferSize, sampleRate);
 
 	ofSoundStreamSetup(0, 1, this);
 
