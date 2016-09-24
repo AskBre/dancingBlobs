@@ -1,19 +1,28 @@
 #include "ofApp.h"
 
+// TODO Enable selecting of different forms of audio-visual interaction
+// TODO Change user interface to enable several blobs
+// TODO Make second screen with basic GUI
+
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofSetVerticalSync(true);
-    ofEnableSmoothing();
-    ofBackground(0);
+	ofSetVerticalSync(true);
+	ofEnableSmoothing();
+	ofBackground(0);
 
-    int pointCount = 6;
-    int bufferSize = 256;
-    int sampleRate = 44100; 
+	int pointCount = 6;
+	int bufferSize = 256;
+	int sampleRate = 44100;
 
-    blob.setup(bufferSize, sampleRate);
-    blob.setPointCount(pointCount);
+	blob.setup(bufferSize, sampleRate);
+	blob.setPointCount(pointCount);
 
-    ofSoundStreamSetup(0, 1, this); 
+	ofSoundStreamSetup(0, 1, this);
+
+	ofSetLogLevel(OF_LOG_VERBOSE);
+
+	if(ofGetLogLevel() == OF_LOG_VERBOSE) cout << "DEbuggong!!!!!!!!!!" << endl;
+	else cout << "Not debugging..." << endl;
 }
 
 void ofApp::exit() {
@@ -22,16 +31,17 @@ void ofApp::exit() {
 }
 
 void ofApp::update(){
-    blob.update();
+	blob.update();
 }
 
 void ofApp::draw(){
-    blob.draw();
+	blob.draw();
 
-    ofDrawBitmapString(ofToString(ofGetFrameRate()), 10, 10);
+	ofDrawBitmapString(ofToString(ofGetFrameRate()), 10, 10);
 }
 
 void ofApp::audioIn(float *input, int bufferSize, int nChannels) {
+// TODO Optimize by pushing audio-data only per frame update
 	blob.audioIn(input, bufferSize);
 }
 
@@ -46,19 +56,9 @@ void ofApp::mouseMoved(int x, int y ){
 }
 
 void ofApp::mouseDragged(int x, int y, int button){
-    blob.setOrigo(ofVec2f(x, y));
 }
 
 void ofApp::mousePressed(int x, int y, int button){
-    switch (button) {
-        case 0:
-            blob.addPoint();
-            break;
-        case 2:
-            blob.removePoint();
-        default:
-            break;
-    }
 }
 
 void ofApp::mouseReleased(int x, int y, int button){

@@ -12,9 +12,11 @@ badd +1 src/main.cpp
 badd +1 Makefile
 badd +1 addons.make
 badd +1 src/ofApp.h
-badd +1 src/ofApp.cpp
+badd +54 src/ofApp.cpp
 badd +1 src/dancingBlob.h
 badd +1 src/dancingBlob.cpp
+badd +0 TODO.md
+badd +0 config.make
 argglobal
 silent! argdel *
 argadd src/main.cpp
@@ -25,12 +27,19 @@ wincmd _ | wincmd |
 vsplit
 1wincmd h
 wincmd w
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 139 + 139) / 279)
-exe 'vert 2resize ' . ((&columns * 139 + 139) / 279)
+exe 'vert 1resize ' . ((&columns * 137 + 138) / 276)
+exe '2resize ' . ((&lines * 40 + 42) / 84)
+exe 'vert 2resize ' . ((&columns * 138 + 138) / 276)
+exe '3resize ' . ((&lines * 40 + 42) / 84)
+exe 'vert 3resize ' . ((&columns * 138 + 138) / 276)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -41,7 +50,25 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 41) / 83)
+let s:l = 1 - ((0 * winheight(0) + 40) / 81)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+wincmd w
+argglobal
+edit config.make
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 1 - ((0 * winheight(0) + 20) / 40)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -59,15 +86,19 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 41) / 83)
+let s:l = 1 - ((0 * winheight(0) + 20) / 40)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
 normal! 0
 wincmd w
-exe 'vert 1resize ' . ((&columns * 139 + 139) / 279)
-exe 'vert 2resize ' . ((&columns * 139 + 139) / 279)
+2wincmd w
+exe 'vert 1resize ' . ((&columns * 137 + 138) / 276)
+exe '2resize ' . ((&lines * 40 + 42) / 84)
+exe 'vert 2resize ' . ((&columns * 138 + 138) / 276)
+exe '3resize ' . ((&lines * 40 + 42) / 84)
+exe 'vert 3resize ' . ((&columns * 138 + 138) / 276)
 tabedit src/ofApp.cpp
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -78,8 +109,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 139 + 139) / 279)
-exe 'vert 2resize ' . ((&columns * 139 + 139) / 279)
+exe 'vert 1resize ' . ((&columns * 134 + 138) / 276)
+exe 'vert 2resize ' . ((&columns * 141 + 138) / 276)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -90,11 +121,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 41) / 83)
+let s:l = 22 - ((21 * winheight(0) + 40) / 81)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+22
 normal! 0
 wincmd w
 argglobal
@@ -108,15 +139,15 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 41) / 83)
+let s:l = 8 - ((7 * winheight(0) + 40) / 81)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+8
+normal! 05|
 wincmd w
-exe 'vert 1resize ' . ((&columns * 139 + 139) / 279)
-exe 'vert 2resize ' . ((&columns * 139 + 139) / 279)
+exe 'vert 1resize ' . ((&columns * 134 + 138) / 276)
+exe 'vert 2resize ' . ((&columns * 141 + 138) / 276)
 tabedit src/dancingBlob.cpp
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -127,8 +158,8 @@ set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 139 + 139) / 279)
-exe 'vert 2resize ' . ((&columns * 139 + 139) / 279)
+exe 'vert 1resize ' . ((&columns * 134 + 138) / 276)
+exe 'vert 2resize ' . ((&columns * 141 + 138) / 276)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -139,11 +170,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 41) / 83)
+let s:l = 2 - ((1 * winheight(0) + 40) / 81)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+2
 normal! 0
 wincmd w
 argglobal
@@ -157,16 +188,38 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 41) / 83)
+let s:l = 42 - ((41 * winheight(0) + 40) / 81)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+42
+normal! 046|
 wincmd w
-exe 'vert 1resize ' . ((&columns * 139 + 139) / 279)
-exe 'vert 2resize ' . ((&columns * 139 + 139) / 279)
-tabnext 2
+exe 'vert 1resize ' . ((&columns * 134 + 138) / 276)
+exe 'vert 2resize ' . ((&columns * 141 + 138) / 276)
+tabedit TODO.md
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 2 - ((1 * winheight(0) + 41) / 82)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+2
+normal! 0
+tabnext 1
 set stal=1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
