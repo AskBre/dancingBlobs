@@ -9,9 +9,12 @@ class GuiApp : public ofBaseApp {
 		void update();
 		void draw();
 
+		void setBlobCount(unsigned count) {curBlob.set("Current blob", curBlob, 1, count);};
+
 		ofxPanel panel;
 
 		ofParameter<unsigned> maxPoints;
+		ofParameter<unsigned> curBlob;
 		ofParameter<bool> isDebug;
 
 		vector<ofParameter<ofVec2f>> blobVals;

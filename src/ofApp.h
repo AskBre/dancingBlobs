@@ -29,7 +29,6 @@ class ofApp : public ofBaseApp{
 
 		vector<ofxAubioMelBands> bands;
 		vector<DancingBlob> blobs;
-		int curBlob = 0;
 
 		shared_ptr<GuiApp> gui;
 };

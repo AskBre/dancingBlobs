@@ -13,6 +13,7 @@ void GuiApp::setup() {
 	panel.add(isDebug.set("Debug-layer", true));
 
 	panel.add(space);
+	panel.add(curBlob.set("Current blob", 1, 1, 1));
 	panel.add(maxPoints.set("Max points", 1, 1, 10000));
 
 	panel.add(space);

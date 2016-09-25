@@ -17,6 +17,8 @@ void ofApp::setup(){
 //		blobs.at(i).gain = gui->blobPanels.at(i).gain;
 //		blobs.at(i).speed = gui->blobPanels.at(i).speed;
 
+	gui->setBlobCount(blobs.size());
+
 	// Setup aubio-analyzers
 	bands.resize(blobs.size());
 	for(auto &b : bands) b.setup("default", bufferSize*2, bufferSize, sampleRate);
@@ -62,9 +64,8 @@ void ofApp::audioIn(float *input, int bufferSize, int nChannels) {
 void ofApp::keyPressed(int key){
 	// key-59 gives the number
 	unsigned keyNum = key-48; 
-	if(keyNum >= 0 && keyNum < blobs.size()) {
-		curBlob = keyNum;
-		cout << "Current blob is " << curBlob << endl;
+	if(keyNum >= 1 && keyNum <= blobs.size()) {
+		gui->curBlob = keyNum;
 	}
 }
 
@@ -75,15 +76,15 @@ void ofApp::mouseMoved(int x, int y ){
 }
 
 void ofApp::mouseDragged(int x, int y, int button){
-	blobs.at(curBlob).mouseDragged(x, y, button);
+	blobs.at(gui->curBlob-1).mouseDragged(x, y, button);
 }
 
 void ofApp::mousePressed(int x, int y, int button){
-	blobs.at(curBlob).mousePressed(x, y, button);
+	blobs.at(gui->curBlob-1).mousePressed(x, y, button);
 }
 
 void ofApp::mouseReleased(int x, int y, int button){
-	blobs.at(curBlob).mouseReleased(x, y, button);
+	blobs.at(gui->curBlob-1).mouseReleased(x, y, button);
 }
 
 void ofApp::mouseEntered(int x, int y){
