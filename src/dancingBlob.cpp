@@ -1,7 +1,7 @@
 #include "dancingBlob.h"
 // TODO Flatten FFT so bass doesn't have the extreme priority
 
-void DancingBlob::setup(type_t _type, int bufferSize, int sampleRate) {
+DancingBlob::DancingBlob(type_t _type) {
 	type = _type;
 
 	// Setup mouse events
@@ -13,23 +13,21 @@ void DancingBlob::setup(type_t _type, int bufferSize, int sampleRate) {
 	int nPoints = 10;
 
 	speed.set("Speed", 0.0001, 0.00001, 0.01);
-	gain.set("Gain", ofGetHeight(), 1, 1000);
+	gain.set("Gain", ofGetHeight()*10, 1, 1000);
 
 	origo.set(ofGetWidth()/2, ofGetHeight()/2);
 	points.resize(nPoints);
 	points.pop_back();
 
-	// Setup aubio-analyzers
-	bands.setup("default", bufferSize * 2, bufferSize * 0.5, sampleRate);
-	pitch.setup("yinfft", 8 * bufferSize, bufferSize, sampleRate);
-
-	//
-	smoothBands.resize(bands.nBands);
-
-	cout << "Blob setup with type " << type << ", bs " << bufferSize << "and sr " << sampleRate << endl;
+	smoothBands.resize(bands.size());
 }
 
-void DancingBlob::update() {
+void DancingBlob::update(vector<float> &_bands) {
+	// TODO This should be used as reference all the way
+	bands = _bands;
+
+	if(smoothBands.size() != bands.size()) smoothBands.resize(bands.size());
+
 	switch (type) {
 		case DIRECT:
 			updateDirect();
@@ -68,22 +66,18 @@ void DancingBlob::draw() {
 }
 
 void DancingBlob::drawDebug() {
-
-	ofDrawBitmapString(pitch.latestPitch, 10, 20);
-	ofDrawBitmapString(pitch.pitchConfidence, 10, 30);
-
 	ofSetHexColor(0xFF0000);
 	for(auto p : points) {
 		ofDrawCircle(p.x, p.y, 2);
 	}
 
 	float gain = ofGetHeight();
-	float offset = (float)ofGetWidth()/(float)bands.nBands;
+	float offset = (float)ofGetWidth()/(float)bands.size();
 	float xPos;
 
 	ofPolyline line;
-	for(int i=0; i<bands.nBands; i++) {
-		line.curveTo(xPos, ofGetHeight()-(bands.energies[i]*gain));
+	for(unsigned i=0; i<bands.size(); i++) {
+		line.curveTo(xPos, ofGetHeight()-(bands.at(i)*gain));
 		xPos+=offset;
 	}
 	ofSetHexColor(0xFFFFFF);
@@ -91,21 +85,14 @@ void DancingBlob::drawDebug() {
 
 	xPos = 0;
 	ofPolyline smoothLine;
-	for(int i=0; i<bands.nBands; i++) {
-		smoothLine.curveTo(xPos, ofGetHeight()-(smoothBands[i]*gain));
+	for(unsigned i=0; i<bands.size(); i++) {
+		smoothLine.curveTo(xPos, ofGetHeight()-(smoothBands.at(i)*gain));
 		xPos+=offset;
 	}
 
 	ofSetHexColor(0xFFFFFF);
 	smoothLine.draw();
 }
-
-//--------------------------------------------------------------
-void DancingBlob::audioIn(float *input, int bufferSize) {
-	bands.audioIn(input, bufferSize, 1);
-	pitch.audioIn(input, bufferSize, 1);
-}
-
 
 //--------------------------------------------------------------
 void DancingBlob::addPoint() {
@@ -156,12 +143,12 @@ void DancingBlob::mouseDragged(ofMouseEventArgs &mouseArgs) {
 //--------------------------------------------------------------
 void DancingBlob::updateDists() {
 	int i = 0;
-	float offset = (float)bands.nBands / (float)(points.size()-1);
+	float offset = (float)bands.size() / (float)(points.size()-1);
 	float angleChangePerPt = TWO_PI / (float)points.size();
 	float angle = 0;
 
-	for(int j=0; j<bands.nBands; j++) {
-		float dist = smoothBands[j]/offset;
+	for(unsigned j=0; j<bands.size(); j++) {
+		float dist = smoothBands.at(j)/offset;
 		if(j > i*offset) {
 			points.at(i).d = dist * gain;
 			i++;
@@ -177,44 +164,44 @@ void DancingBlob::updateDists() {
 }
 //--------------------------------------------------------------
 void DancingBlob::updateDirect() {
-	for(int j=0; j<bands.nBands; j++) {
-		if(smoothBands[j] > 0) {
-			smoothBands[j] = bands.energies[j];
+	for(unsigned j=0; j<bands.size(); j++) {
+		if(smoothBands.at(j) > 0) {
+			smoothBands.at(j) = bands.at(j);
 		} else {
-			smoothBands[j] = speed;
+			smoothBands.at(j) = speed;
 		}
 	}
 }
 
 void DancingBlob::updateEase() {
-	for(int j=0; j<bands.nBands; j++) {
-		if(smoothBands[j] > 0) {
-			if(smoothBands[j] < bands.energies[j]) smoothBands[j] += speed;
-			else if (smoothBands[j] > bands.energies[j]) smoothBands[j] -= speed;
+	for(unsigned j=0; j<bands.size(); j++) {
+		if(smoothBands.at(j) > 0) {
+			if(smoothBands.at(j) < bands.at(j)) smoothBands.at(j) += speed;
+			else if (smoothBands.at(j) > bands.at(j)) smoothBands.at(j) -= speed;
 		} else {
-			smoothBands[j] = speed;
+			smoothBands.at(j) = speed;
 		}
 	}
 }
 
 void DancingBlob::updateEaseOut() {
-	for(int j=0; j<bands.nBands; j++) {
-		if(smoothBands[j] > 0) {
-			if(smoothBands[j] < bands.energies[j]) smoothBands[j] *= 1 + speed;
-			else if (smoothBands[j] > bands.energies[j]) smoothBands[j] = bands.energies[j];
+	for(unsigned j=0; j<bands.size(); j++) {
+		if(smoothBands.at(j) > 0) {
+			if(smoothBands.at(j) < bands.at(j)) smoothBands.at(j) *= 1 + speed;
+			else if (smoothBands.at(j) > bands.at(j)) smoothBands.at(j) = bands.at(j);
 		} else {
-			smoothBands[j] = speed;
+			smoothBands.at(j) = speed;
 		}
 	}
 }
 
 void DancingBlob::updateEaseIn() {
-	for(int j=0; j<bands.nBands; j++) {
-		if(smoothBands[j] > 0) {
-			if(smoothBands[j] < bands.energies[j]) smoothBands[j] = bands.energies[j];
-			else if (smoothBands[j] > bands.energies[j]) smoothBands[j] *= speed;
+	for(unsigned j=0; j<bands.size(); j++) {
+		if(smoothBands.at(j) > 0) {
+			if(smoothBands.at(j) < bands.at(j)) smoothBands.at(j) = bands.at(j);
+			else if (smoothBands.at(j) > bands.at(j)) smoothBands.at(j) *= speed;
 		} else {
-			smoothBands[j] = speed;
+			smoothBands.at(j) = speed;
 		}
 	}
 }

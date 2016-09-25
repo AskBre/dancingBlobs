@@ -13,19 +13,16 @@ enum type_t {
 class DancingBlob : public ofBaseApp {
 
 	public:
+		DancingBlob(type_t type);
 		~DancingBlob() {
 			ofRemoveListener(ofEvents().mousePressed, this, &DancingBlob::mousePressed);
 			ofRemoveListener(ofEvents().mouseReleased, this, &DancingBlob::mouseReleased);
 			ofRemoveListener(ofEvents().mouseDragged, this, &DancingBlob::mouseDragged);
 		};
 
-		void setup(type_t type, int bufferSize, int sampleRate);
-
-		void update();
+		void update(vector<float> &_bands);
 		void draw();
 		void drawDebug();
-
-		void audioIn(float * input, int bufferSize);
 
 		void addPoint();
 		void removePoint();
@@ -48,9 +45,7 @@ class DancingBlob : public ofBaseApp {
 			float d = 0;
 		};
 
-		ofxAubioMelBands bands;
-		ofxAubioPitch pitch;
-
+		vector<float> bands;
 		vector<float> smoothBands;
 		vector<point> points;
 
