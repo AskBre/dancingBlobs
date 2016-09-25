@@ -3,8 +3,6 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 
-// TODO TODO TODO TODO
-// This is a bad idea to spend time on. I know I'm using four blobs, so let's just make the gui static!!!
 class GuiApp : public ofBaseApp {
 	public:
 		void setup();

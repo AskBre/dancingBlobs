@@ -28,8 +28,8 @@ class ofApp : public ofBaseApp{
 		void audioIn(float * input, int bufferSize, int nChannels);
 
 		vector<ofxAubioMelBands> bands;
-
 		vector<DancingBlob> blobs;
+		int curBlob = 0;
 
 		shared_ptr<GuiApp> gui;
 };

@@ -14,11 +14,7 @@ class DancingBlob : public ofBaseApp {
 
 	public:
 		DancingBlob(type_t type);
-		~DancingBlob() {
-			ofRemoveListener(ofEvents().mousePressed, this, &DancingBlob::mousePressed);
-			ofRemoveListener(ofEvents().mouseReleased, this, &DancingBlob::mouseReleased);
-			ofRemoveListener(ofEvents().mouseDragged, this, &DancingBlob::mouseDragged);
-		};
+		~DancingBlob(){};
 
 		void update(vector<float> &_bands);
 		void draw();
@@ -28,11 +24,9 @@ class DancingBlob : public ofBaseApp {
 		void removePoint();
 		void setPointCount(unsigned count);
 
-		void newGain();
-
-		void mousePressed(ofMouseEventArgs &mouseArgs);
-		void mouseReleased(ofMouseEventArgs &mouseArgs);
-		void mouseDragged(ofMouseEventArgs &mouseArgs);
+		void mousePressed(int x, int y, int button);
+		void mouseReleased(int x, int y, int button);
+		void mouseDragged(int x, int y, int button);
 
 		type_t type;
 		ofParameter<float> gain;

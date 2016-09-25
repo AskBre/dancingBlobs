@@ -4,11 +4,6 @@
 DancingBlob::DancingBlob(type_t _type) {
 	type = _type;
 
-	// Setup mouse events
-	ofAddListener(ofEvents().mousePressed, this, &DancingBlob::mousePressed);
-	ofAddListener(ofEvents().mouseReleased, this, &DancingBlob::mouseReleased);
-	ofAddListener(ofEvents().mouseDragged, this, &DancingBlob::mouseDragged);
-	
 	// Set default values
 	int nPoints = 10;
 
@@ -123,20 +118,20 @@ void DancingBlob::setPointCount(unsigned count) {
 }
 
 //--------------------------------------------------------------
-void DancingBlob::mousePressed(ofMouseEventArgs &mouseArgs) {
-	ofVec2f m = ofVec2f(mouseArgs.x, mouseArgs.y);
+void DancingBlob::mousePressed(int x, int y, int button) {
+	ofVec2f m = ofVec2f(x, y);
 	if(m.distance(origo) < 10) {
 		beingDragged = true;
 	}
 }
 
-void DancingBlob::mouseReleased(ofMouseEventArgs &mouseArgs) {
+void DancingBlob::mouseReleased(int x, int y, int button) {
 	beingDragged = false;
 }
 
-void DancingBlob::mouseDragged(ofMouseEventArgs &mouseArgs) {
+void DancingBlob::mouseDragged(int x, int y, int button) {
 	if(beingDragged) {
-		origo =	ofVec2f(mouseArgs.x, mouseArgs.y);
+		origo =	ofVec2f(x, y);
 	}
 }
 
