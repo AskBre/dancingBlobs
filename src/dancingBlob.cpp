@@ -10,7 +10,7 @@ DancingBlob::DancingBlob(type_t _type) {
 	speed.set("Speed", 0.0001, 0.00001, 0.01);
 	gain.set("Gain", ofGetHeight()*10, 1, 1000);
 
-	origo.set(ofGetWidth()/2, ofGetHeight()/2);
+	origo.set("Pos", ofVec2f(ofGetWidth()/2, ofGetHeight()/2));
 	points.resize(nPoints);
 	points.pop_back();
 
@@ -151,8 +151,8 @@ void DancingBlob::updateDists() {
 	}
 
 	for (auto &p : points) {
-		p.x = origo.x + p.d * sin(angle);
-		p.y = origo.y + p.d * cos(angle);
+		p.x = origo->x + p.d * sin(angle);
+		p.y = origo->y + p.d * cos(angle);
 
 		angle += angleChangePerPt;
 	}

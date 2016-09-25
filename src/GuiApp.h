@@ -9,7 +9,10 @@ class GuiApp : public ofBaseApp {
 		void update();
 		void draw();
 
-		void setBlobCount(unsigned count) {curBlob.set("Current blob", curBlob, 1, count);};
+		void setBlobCount(unsigned count) {
+			blobCount = count;
+			curBlob.set("Current blob", curBlob, 1, blobCount);
+		};
 
 		ofxPanel panel;
 
@@ -17,7 +20,11 @@ class GuiApp : public ofBaseApp {
 		ofParameter<unsigned> curBlob;
 		ofParameter<bool> isDebug;
 
-		vector<ofParameter<ofVec2f>> blobVals;
+		vector<ofParameter<float>> blobSpeeds;
+		vector<ofParameter<float>> blobGains;
+		vector<ofParameter<ofVec2f>> blobPos;
+
+		unsigned blobCount = 1;
 
 		ofxButton save;
 		ofxButton clear;
@@ -25,5 +32,4 @@ class GuiApp : public ofBaseApp {
 	private:
 		ofParameter<string> space;
 		ofParameter<float> frameRate;
-
 };

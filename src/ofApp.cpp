@@ -12,12 +12,14 @@ void ofApp::setup(){
 	blobs.push_back(DancingBlob(EASE));
 	blobs.push_back(DancingBlob(DIRECT));
 
-//		blobs.at(i).gain.makeReferenceTo(gui->blobPanels.at(i).gain);
-//		blobs.at(i).speed.makeReferenceTo(gui->blobPanels.at(i).speed);
-//		blobs.at(i).gain = gui->blobPanels.at(i).gain;
-//		blobs.at(i).speed = gui->blobPanels.at(i).speed;
-
 	gui->setBlobCount(blobs.size());
+	gui->setup();
+
+	for(unsigned i=0; i<blobs.size(); i++) {
+		blobs.at(i).gain.makeReferenceTo(gui->blobGains.at(i));
+		blobs.at(i).speed.makeReferenceTo(gui->blobSpeeds.at(i));
+		blobs.at(i).origo.makeReferenceTo(gui->blobPos.at(i));
+	}
 
 	// Setup aubio-analyzers
 	bands.resize(blobs.size());
@@ -63,7 +65,7 @@ void ofApp::audioIn(float *input, int bufferSize, int nChannels) {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	// key-59 gives the number
-	unsigned keyNum = key-48; 
+	unsigned keyNum = key-48;
 	if(keyNum >= 1 && keyNum <= blobs.size()) {
 		gui->curBlob = keyNum;
 	}

@@ -31,6 +31,7 @@ class DancingBlob : public ofBaseApp {
 		type_t type;
 		ofParameter<float> gain;
 		ofParameter<float> speed;
+		ofParameter<ofVec2f> origo;
 
 	private:
 		struct point {
@@ -43,10 +44,7 @@ class DancingBlob : public ofBaseApp {
 		vector<float> smoothBands;
 		vector<point> points;
 
-		// TODO save origo between sessions
-		ofVec2f origo;
 		bool beingDragged = false;
-
 
 		void updateDists();
 
