@@ -3,27 +3,26 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 
+// TODO TODO TODO TODO
+// This is a bad idea to spend time on. I know I'm using four blobs, so let's just make the gui static!!!
 class GuiApp : public ofBaseApp {
 	public:
 		void setup();
 		void update();
 		void draw();
 
-		void setVolsPtr(vector<float> *_volsPtr);
+		ofxPanel panel;
 
-		ofParameter<string> space;
-
-		ofParameter<float> frameRate;
-
-		ofParameter<float> force;
 		ofParameter<unsigned> maxPoints;
 		ofParameter<bool> isDebug;
+
+		vector<ofParameter<ofVec2f>> blobVals;
 
 		ofxButton save;
 		ofxButton clear;
 
 	private:
-		vector<float> *volsPtr;
+		ofParameter<string> space;
+		ofParameter<float> frameRate;
 
-		ofxPanel panel;
 };

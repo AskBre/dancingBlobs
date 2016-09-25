@@ -20,6 +20,7 @@ class DancingBlob : public ofBaseApp {
 		};
 
 		void setup(type_t type, int bufferSize, int sampleRate);
+
 		void update();
 		void draw();
 		void drawDebug();
@@ -30,9 +31,15 @@ class DancingBlob : public ofBaseApp {
 		void removePoint();
 		void setPointCount(unsigned count);
 
-		float gain = ofGetHeight() * 10;
-		float speed = 0.0001;
+		void newGain();
+
+		void mousePressed(ofMouseEventArgs &mouseArgs);
+		void mouseReleased(ofMouseEventArgs &mouseArgs);
+		void mouseDragged(ofMouseEventArgs &mouseArgs);
+
 		type_t type;
+		ofParameter<float> gain;
+		ofParameter<float> speed;
 
 	private:
 		struct point {
@@ -51,9 +58,6 @@ class DancingBlob : public ofBaseApp {
 		ofVec2f origo;
 		bool beingDragged = false;
 
-		void mousePressed(ofMouseEventArgs &mouseArgs);
-		void mouseReleased(ofMouseEventArgs &mouseArgs);
-		void mouseDragged(ofMouseEventArgs &mouseArgs);
 
 		void updateDists();
 

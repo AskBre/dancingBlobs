@@ -4,16 +4,28 @@ void GuiApp::setup() {
 	ofBackground(0);
 	ofSetVerticalSync(false);
 
+	blobVals.resize(2);
+
 	space.set(" ");
 
 	panel.setup();
 	panel.add(frameRate.set("Framerate", 0));
-	panel.add(isDebug);
+	panel.add(isDebug.set("Debug-layer", true));
 
 	panel.add(space);
-	panel.add(force.set("Global Force", 1, -2, 2));
 	panel.add(maxPoints.set("Max points", 1, 1, 10000));
 
+	panel.add(space);
+	for(unsigned i=0; i<blobVals.size(); i++) {
+		string name = ofToString("Speed and gain of blob " + i);
+		panel.add(
+				blobVals.at(i).set(name,
+					ofVec2f(0.0001, 1050),
+					ofVec2f(0, 1),
+					ofVec2f(0.001, 10000)));
+	}
+
+	// TODO Connect these to something
 	panel.add(space);
 	panel.add(save.setup("Save"));
 	panel.add(clear.setup("Clear"));
@@ -28,22 +40,4 @@ void GuiApp::update() {
 
 void GuiApp::draw() {
 	panel.draw();
-
-	/*
-	for(unsigned i=0; i<volsPtr->size(); i++) {
-		ofSetHexColor(0xFFFFFF);
-		int gap = 5;
-		int w = (ofGetWidth()/volsPtr->size()) - gap;
-		int mh = ofGetHeight();
-		int h = volsPtr->at(i) * mh;
-		ofVec2f p((i *w+gap), mh);
-		ofDrawRectangle(p, w, -h);
-	}
-	*/
 }
-
-void GuiApp::setVolsPtr(vector<float> *_volsPtr) {
-	volsPtr = _volsPtr;
-}
-
-//--------------------------------------------------------------

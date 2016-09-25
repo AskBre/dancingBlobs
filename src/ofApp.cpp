@@ -1,9 +1,5 @@
 #include "ofApp.h"
 
-// TODO Enable selecting of different forms of audio-visual interaction
-// TODO Change user interface to enable several blobs
-// TODO Make second screen with basic GUI
-
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofSetVerticalSync(true);
@@ -12,11 +8,24 @@ void ofApp::setup(){
 
 	int bufferSize = 256;
 	int sampleRate = 44100;
+	int blobCount = 2;
 
-	blob.setup(EASE, bufferSize, sampleRate);
+	channels.resize(blobCount);
+	for(auto &c : channels) c.resize(bufferSize);
 
-	ofSoundStreamSetup(0, 1, this);
+	for(auto f : channels.at(0)) cout << f << endl;
 
+	for(int i=0; i<blobCount; i++) {
+		blobs.push_back(DancingBlob());
+		blobs.at(i).setup(EASE, bufferSize, sampleRate);
+
+//		blobs.at(i).gain.makeReferenceTo(gui->blobPanels.at(i).gain);
+//		blobs.at(i).speed.makeReferenceTo(gui->blobPanels.at(i).speed);
+//		blobs.at(i).gain = gui->blobPanels.at(i).gain;
+//		blobs.at(i).speed = gui->blobPanels.at(i).speed;
+	}
+
+	ofSoundStreamSetup(0, blobCount, this);
 }
 
 void ofApp::exit() {
@@ -25,17 +34,46 @@ void ofApp::exit() {
 }
 
 void ofApp::update(){
-	blob.update();
+	for(unsigned i=0; i<blobs.size(); i++) {
+		auto &b = blobs.at(i);
+
+		for(auto f : channels.at(i)) cout << f << endl;
+		cout << endl;
+
+		b.audioIn(&channels.at(i)[0], channels.at(i).size());
+		b.update();
+	}
+
+//	blob.update();
 }
 
 void ofApp::draw(){
-	blob.draw();
-	if(gui->isDebug) blob.drawDebug();
+	for(auto &b: blobs) {
+		b.draw();
+		if(gui->isDebug) b.drawDebug();
+	}
 }
 
 void ofApp::audioIn(float *input, int bufferSize, int nChannels) {
-// TODO Optimize by pushing audio-data only per frame update
-	blob.audioIn(input, bufferSize);
+		for(unsigned i=0; i<bufferSize; i++) {
+	for(unsigned j=0; j<nChannels; j++) {
+//			cout << "i: " << i << " j: " << j << endl;
+//			cout << "Channels " << channels.size() << " floats " << channels.at(j).size() << endl;
+			channels.at(j).at(i) = 0.0002;
+		}
+	}
+
+	/*
+	for(unsigned i=0; i< blobs.size(); i++) {
+		for(unsigned j=0; j<bufferSize; j+=blobs.size()) {
+			channels[i][j]=input[j+i];
+		}
+
+		blobs.at(i).audioIn(channels[i], bufferSize);
+	}
+	*/
+
+//	for(auto b : blobs) b.audioIn(chan, bufferSize, nChannels);
 }
 
 //--------------------------------------------------------------
@@ -72,4 +110,3 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 //--------------------------------------------------------------
-

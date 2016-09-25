@@ -26,8 +26,9 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		void audioIn(float * input, int bufferSize, int nChannels);
+		vector<vector<float>> channels;
 
-		DancingBlob blob;
+		vector<DancingBlob> blobs;
 
 		shared_ptr<GuiApp> gui;
 };

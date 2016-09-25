@@ -8,9 +8,12 @@ void DancingBlob::setup(type_t _type, int bufferSize, int sampleRate) {
 	ofAddListener(ofEvents().mousePressed, this, &DancingBlob::mousePressed);
 	ofAddListener(ofEvents().mouseReleased, this, &DancingBlob::mouseReleased);
 	ofAddListener(ofEvents().mouseDragged, this, &DancingBlob::mouseDragged);
-
+	
 	// Set default values
 	int nPoints = 10;
+
+	speed.set("Speed", 0.0001, 0.00001, 0.01);
+	gain.set("Gain", ofGetHeight(), 1, 1000);
 
 	origo.set(ofGetWidth()/2, ofGetHeight()/2);
 	points.resize(nPoints);
@@ -22,6 +25,8 @@ void DancingBlob::setup(type_t _type, int bufferSize, int sampleRate) {
 
 	//
 	smoothBands.resize(bands.nBands);
+
+	cout << "Blob setup with type " << type << ", bs " << bufferSize << "and sr " << sampleRate << endl;
 }
 
 void DancingBlob::update() {
@@ -161,7 +166,6 @@ void DancingBlob::updateDists() {
 			points.at(i).d = dist * gain;
 			i++;
 		}
-
 	}
 
 	for (auto &p : points) {
